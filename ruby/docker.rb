@@ -1,3 +1,4 @@
+require 'block-is-array'
 require 'dockerfile-dsl'
 require 'rake/clean'
 
@@ -6,7 +7,7 @@ require_relative '../config'
 
 
 def docker_tasks image, run_options='', &block
-  File.write 'Dockerfile', dockerfile(&block)
+  create_dockerfile(&block)
 
   image = File.join DOCKER_USER.to_s, image.to_s
 
@@ -15,6 +16,20 @@ def docker_tasks image, run_options='', &block
   task_push image
 
   task :default => :build
+end
+
+def create_dockerfile &block
+  array = block_is_array(&block)
+
+  if array[0][0] != :from
+    array.insert 0, [:from, DEFAULT_BASE_IMAGE]
+  end
+
+  if array.map{ |entry| entry[0] != :maintainer }.all?
+    array.insert 1, [:maintainer, MAINTAINER]
+  end
+
+  File.write 'Dockerfile', Dockerfile::from_array(array)
 end
 
 def task_build image

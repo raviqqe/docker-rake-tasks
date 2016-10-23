@@ -48,7 +48,7 @@ def task_run image, options
   task_build image
 
   task :run => :build do
-    hostname = [image, '.', `hostname`.strip].join
+    hostname = [File.basename(image), '.', `hostname`.strip].join
     sh %Q(sudo docker run -d -h #{hostname} --name #{hostname} #{options} \
                           #{image})
   end

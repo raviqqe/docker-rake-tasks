@@ -1,4 +1,5 @@
 require 'dockerfile-dsl'
+require 'rake/clean'
 
 require_relative '../config'
 
@@ -61,3 +62,6 @@ end
 def maybe_sh command
   sh command if command
 end
+
+
+CLEAN.include Dir.glob('Dockerfile')

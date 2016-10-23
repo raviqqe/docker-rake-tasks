@@ -1,4 +1,5 @@
 DOCKER_USER = 'raviqqe'
+MAINTAINER = 'Yota Toyama raviqqe@gmail.com'
 
 WEB_PORT = 8000
 GIT_PORT = 8001

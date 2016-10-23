@@ -1,8 +1,10 @@
 require_relative '../ruby/docker'
+require_relative '../config'
+
 
 docker_tasks :ubuntu do
   from 'ubuntu:xenial'
-  maintainer 'Yota Toyama <raviqqe@gmail.com>'
+  maintainer MAINTAINER
 
   apt = 'apt -y'
 

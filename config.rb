@@ -4,6 +4,7 @@ DEFAULT_BASE_IMAGE = 'raviqqe/ubuntu'
 
 WEB_PORT = 8000
 GIT_PORT = 8001
+SQL_PORT = 5423
 
 DOMAIN_NAME = 'raviqqe.com'
 

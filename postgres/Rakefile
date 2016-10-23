@@ -1,0 +1,8 @@
+require_relative '../ruby/docker'
+require_relative '../config'
+
+
+docker_tasks :postgres, "-p #{SQL_PORT}" do
+  from 'postgres'
+  expose SQL_PORT
+end

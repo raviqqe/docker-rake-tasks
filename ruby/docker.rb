@@ -1,7 +1,12 @@
+require 'dockerfile-dsl'
+
 require_relative '../config'
 
 
-def docker_tasks image, run_options=''
+
+def docker_tasks image, run_options='', &block
+  File.write 'Dockerfile', dockerfile(&block)
+
   image = File.join DOCKER_USER.to_s, image.to_s
 
   task_run image, run_options

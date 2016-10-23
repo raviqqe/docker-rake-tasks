@@ -1,3 +1,11 @@
 require_relative '../ruby/docker'
 
-docker_tasks :ubuntu
+docker_tasks :ubuntu do
+  from 'ubuntu:xenial'
+  maintainer 'Yota Toyama <raviqqe@gmail.com>'
+
+  apt = 'apt -y'
+
+  run apt, :update
+  run apt, :upgrade
+end

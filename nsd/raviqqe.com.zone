@@ -1,0 +1,18 @@
+$ORIGIN raviqqe.com.
+$TTL 86400
+@   SOA dns0.raviqqe.com. raviqqe@gmail.com. (
+    2016101701 ; serial
+    21600      ; refresh (s)
+    3600       ; retry (s)
+    604800     ; expire (s)
+    86400 )    ; minimum (s)
+    IN A 160.16.96.192
+    IN NS dns0.raviqqe.com.
+    IN NS dns1.raviqqe.com.
+
+dns0 IN A 160.16.96.192
+dns1 IN A 160.16.96.192
+www  IN A 160.16.96.192
+git  IN A 160.16.96.192
+bennetti IN A 160.16.96.192
+nasicus  IN A 153.126.181.78

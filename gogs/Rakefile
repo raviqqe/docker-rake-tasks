@@ -1,0 +1,22 @@
+require_relative '../ruby/docker'
+require_relative '../config'
+
+
+docker_tasks :nsd, "-p #{GIT_PORT}:443" do
+  run 'apt -y install golang git'
+
+  run 'adduser --disabled-login --gecos Gogs git'
+  user :git
+
+  env :HOME, '/home/git'
+  env :GOPATH, '$HOME/go'
+  env :PATH, '$GOROOT/bin:$GOPATH/bin:$PATH'
+
+  home = "cd $HOME &&"
+
+  run home, 'git clone https://github.com/gogits/gogs'
+
+  expose 443
+
+  cmd 'cd /home/git && gogs'
+end

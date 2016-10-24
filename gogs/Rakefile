@@ -3,7 +3,7 @@ require_relative '../config'
 require_relative '../security'
 
 
-docker_tasks :gogs, "-p #{GIT_PORT}:443" do
+docker_tasks :gogs, "-p #{GIT_PORT}:443 -e SQL_PASSWORD=#{SQL_PASSWORD}" do
   run 'apt -y install golang git'
 
   run 'adduser --disabled-login --gecos Gogs git'
@@ -21,17 +21,16 @@ docker_tasks :gogs, "-p #{GIT_PORT}:443" do
   run "cd $HOME && go get -u #{gogs_repo}"
   run "cd #{gogs_dir} && go build"
 
+  expose 443
+
   conf_dir = 'custom/conf'
   app_ini = "
 [repository]
 ROOT = #{home}/repos
 [database]
-PASSWD = \\`#{SQL_PASSWORD}\\`"
+PASSWD = \\`$SQL_PASSWORD\\`"
 
-  run "cd #{gogs_dir} && mkdir -p #{conf_dir} && \
-       echo #{app_ini.dump.gsub '\\\\', '\\'} > #{conf_dir}/app.ini"
-
-  expose 443
-
-  cmd "cd #{gogs_dir} && ./gogs web"
+  cmd "cd #{gogs_dir} && mkdir -p #{conf_dir} && \
+       echo #{app_ini.dump.gsub '\\\\', '\\'} > #{conf_dir}/app.ini && \
+       ./gogs web"
 end

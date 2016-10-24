@@ -13,10 +13,12 @@ docker_tasks :nsd, "-p #{GIT_PORT}:443" do
   env :PATH, '$GOROOT/bin:$GOPATH/bin:$PATH'
 
   home = "cd $HOME &&"
+  gogs_repo = 'github.com/gogits/gogs'
 
-  run home, 'git clone https://github.com/gogits/gogs'
+  run home, "go get -u #{gogs_repo}"
+  run "cd $GOPATH/src/#{gogs_repo} && go build"
 
   expose 443
 
-  cmd 'cd /home/git && gogs'
+  cmd 'cd /home/git && gogs web'
 end

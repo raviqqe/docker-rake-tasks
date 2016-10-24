@@ -1,7 +1,7 @@
 $ORIGIN raviqqe.com.
 $TTL 86400
 @ SOA dns0.raviqqe.com. raviqqe@gmail.com. (
-  2016101701 ; serial
+  2016102401 ; serial
   21600      ; refresh (s)
   3600       ; retry (s)
   604800     ; expire (s)

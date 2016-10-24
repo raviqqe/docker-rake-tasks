@@ -13,6 +13,7 @@ def docker_tasks image, run_options='', &block
 
   task_run image, run_options
   task_rm image
+  task_rerun
   task_push image
 
   task :default => :build
@@ -51,6 +52,12 @@ def task_run image, options
     hostname = [File.basename(image), '.', `hostname`.strip].join
     sh %Q(sudo docker run -d -h #{hostname} --name #{hostname} #{options} \
                           #{image})
+  end
+end
+
+def task_rerun
+  task :rerun => :rm do
+    Rake::Task[:run].invoke
   end
 end
 

@@ -35,13 +35,13 @@ end
 
 def task_build image
   task :build do
-    sh %Q(sudo docker build -t #{image} .)
+    sh %(sudo docker build -t #{image} .)
   end
 end
 
 def task_push image
   task :push do
-    sh %Q(sudo docker push #{image})
+    sh %(sudo docker push #{image})
   end
 end
 
@@ -50,7 +50,7 @@ def task_run image, options
 
   task :run => :build do
     hostname = [File.basename(image), '.', `hostname`.strip].join
-    sh %Q(sudo docker run -itd -h #{hostname} --name #{hostname} #{options} \
+    sh %(sudo docker run -itd -h #{hostname} --name #{hostname} #{options} \
                           #{image})
   end
 end
@@ -64,7 +64,7 @@ end
 def docker_subcommand_on_image subcommand, image, another_grep=:cat
   containers = `sudo docker ps -a | grep #{image} | #{another_grep} | \
                 awk '{print $1}'`.gsub "\n", ' '
-  %Q(sudo docker #{subcommand} #{containers}) if containers.strip.length > 0
+  %(sudo docker #{subcommand} #{containers}) if containers.strip.length > 0
 end
 
 def task_rm image

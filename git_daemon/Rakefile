@@ -7,7 +7,7 @@ require_relative '../config.rb'
 
 cert_path = '/root/cert.pem'
 key_path = '/root/key.pem'
-socket_path = '/var/run/fcgiwrap.socket'
+socket_path = 'unix:/var/run/fcgiwrap.socket'
 git_dir = '/git'
 
 conf = nginx_conf do
@@ -21,13 +21,17 @@ conf = nginx_conf do
       ssl_certificate_key key_path
 
       location '/' do
+        auth_basic "\"Restricted\""
+        auth_basic_user_file 'htpasswd'
+
         include 'fastcgi_params'
+        fastcgi_param :SCRIPT_FILENAME, '/usr/lib/git-core/git-http-backend'
         fastcgi_param :GIT_PROJECT_ROOT, git_dir
         fastcgi_param :GIT_HTTP_EXPORT_ALL, '""'
         fastcgi_param :PATH_INFO, '$fastcgi_path_info'
         fastcgi_param :PATH_TRANSLATED, '$document_root$fastcgi_path_info'
         fastcgi_param :REMOTE_USER, '$remote_user'
-        fastcgi_pass "unix:#{socket_path}"
+        fastcgi_pass socket_path
       end
     end
   end
@@ -43,5 +47,5 @@ docker_tasks :git, "-p #{GIT_PORT}:443" do
   volume git_dir
   expose 443
 
-  cmd "nginx & spawn-fcgi -s #{socket_path} -- git http-backend"
+  cmd "fcgiwrap -s #{socket_path} & nginx"
 end

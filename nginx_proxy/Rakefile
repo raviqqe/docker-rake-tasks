@@ -1,0 +1,56 @@
+require 'nginx-conf'
+
+require_relative '../ruby/docker'
+require_relative '../config.rb'
+
+
+
+cert_path = '/root/cert.pem'
+key_path = '/root/key.pem'
+
+conf = nginx_conf do
+  daemon :off
+
+  events do
+  end
+
+  http do
+    include 'mime.types'
+
+    server do
+      listen 80
+      return_ 301, 'https://$host$request_uri'
+    end
+
+    ssl_server = Proc.new do |host, port|
+      server do
+        listen 443, :ssl
+        server_name host
+
+        ssl_certificate     cert_path
+        ssl_certificate_key key_path
+
+        location '/' do
+          proxy_pass "https://#{host}:#{port}"
+        end
+      end
+    end
+
+    instance_exec GIT_HOST, GIT_PORT, &ssl_server
+    instance_exec WEB_HOST, WEB_PORT, &ssl_server
+  end
+end
+
+
+docker_tasks :nginx_proxy, "-p 443:443 -p 80:80 \
+                            -v #{CERT_PATH}:#{cert_path} \
+                            -v #{KEY_PATH}:#{key_path}" do
+  run 'apt -y install nginx'
+
+  File.write 'nginx.conf', conf
+  copy 'nginx.conf', '/etc/nginx/nginx.conf'
+
+  expose 80, 443
+
+  cmd :nginx
+end

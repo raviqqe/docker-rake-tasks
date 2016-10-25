@@ -7,6 +7,7 @@ GIT_PORT = 8001
 SQL_PORT = 5423
 
 DOMAIN_NAME = 'raviqqe.com'
+WEB_HOST = 'www.' + DOMAIN_NAME
 GIT_HOST = 'git.' + DOMAIN_NAME
 
 cert_dir = File.join '/etc/letsencrypt/live', DOMAIN_NAME

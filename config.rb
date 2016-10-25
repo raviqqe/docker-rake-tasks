@@ -7,7 +7,8 @@ GIT_PORT = 8001
 SQL_PORT = 5423
 
 DOMAIN_NAME = 'raviqqe.com'
+GIT_HOST = 'git.' + DOMAIN_NAME
 
-# cert_dir = File.join '/usr/local/etc/letsencrypt/live', DOMAIN_NAME
-# CERT_PATH = File.join cert_dir, 'fullchain.pem'
-# PRIV_KEY_PATH = File.join cert_dir, 'privkey.pem'
+cert_dir = File.join '/etc/letsencrypt/live', DOMAIN_NAME
+CERT_PATH = File.join cert_dir, 'fullchain.pem'
+KEY_PATH = File.join cert_dir, 'privkey.pem'

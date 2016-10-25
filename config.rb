@@ -13,3 +13,5 @@ GIT_HOST = 'git.' + DOMAIN_NAME
 cert_dir = File.join '/etc/letsencrypt/live', DOMAIN_NAME
 CERT_PATH = File.join cert_dir, 'fullchain.pem'
 KEY_PATH = File.join cert_dir, 'privkey.pem'
+
+GIT_REPO_VOLUME = 'git_repos'

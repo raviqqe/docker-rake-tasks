@@ -8,6 +8,7 @@ require_relative '../config.rb'
 cert_path = '/root/cert.pem'
 key_path = '/root/key.pem'
 socket_path = 'unix:/var/run/fcgiwrap.socket'
+htpasswd_file = 'htpasswd'
 git_dir = '/git'
 
 conf = nginx_conf do
@@ -22,7 +23,7 @@ conf = nginx_conf do
 
       location '/' do
         auth_basic "\"Restricted\""
-        auth_basic_user_file 'htpasswd'
+        auth_basic_user_file htpasswd_file
 
         include 'fastcgi_params'
         fastcgi_param :SCRIPT_FILENAME, '/usr/lib/git-core/git-http-backend'
@@ -38,11 +39,15 @@ conf = nginx_conf do
 end
 
 
+File.write 'nginx.conf', conf
+copy File.join(__dir__, "../security", htpasswd_file), htpasswd_file
+
+
 docker_tasks :git, "-p #{GIT_PORT}:443" do
   run 'apt -y install nginx git fcgiwrap'
 
-  File.write 'nginx.conf', conf
   copy 'nginx.conf', '/etc/nginx/nginx.conf'
+  copy htpasswd_file, "/etc/nginx/#{htpasswd_file}"
 
   volume git_dir
   expose 443

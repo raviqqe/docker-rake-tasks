@@ -42,7 +42,7 @@ conf = nginx_conf do
 end
 
 
-docker_tasks :nginx_proxy, "-p 443:443 -p 80:80 \
+docker_tasks 'nginx-proxy', "-p 443:443 -p 80:80 \
                             -v #{CERT_PATH}:#{cert_path} \
                             -v #{KEY_PATH}:#{key_path}" do
   run 'apt -y install nginx'

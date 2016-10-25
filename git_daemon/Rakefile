@@ -1,0 +1,47 @@
+require 'nginx-conf'
+
+require_relative '../ruby/docker'
+require_relative '../config.rb'
+
+
+
+cert_path = '/root/cert.pem'
+key_path = '/root/key.pem'
+socket_path = '/var/run/fcgiwrap.socket'
+git_dir = '/git'
+
+conf = nginx_conf do
+  http do
+    include 'mime.types'
+
+    server do
+      listen 443, :ssl
+
+      ssl_certificate     cert_path
+      ssl_certificate_key key_path
+
+      location '/' do
+        include 'fastcgi_params'
+        fastcgi_param :GIT_PROJECT_ROOT, git_dir
+        fastcgi_param :GIT_HTTP_EXPORT_ALL, '""'
+        fastcgi_param :PATH_INFO, '$fastcgi_path_info'
+        fastcgi_param :PATH_TRANSLATED, '$document_root$fastcgi_path_info'
+        fastcgi_param :REMOTE_USER, '$remote_user'
+        fastcgi_pass "unix:#{socket_path}"
+      end
+    end
+  end
+end
+
+
+docker_tasks :git, "-p #{GIT_PORT}:443" do
+  run 'apt -y install nginx git fcgiwrap'
+
+  File.write 'nginx.conf', conf
+  copy 'nginx.conf', '/etc/nginx/nginx.conf'
+
+  volume git_dir
+  expose 443
+
+  cmd "nginx & spawn-fcgi -s #{socket_path} -- git http-backend"
+end

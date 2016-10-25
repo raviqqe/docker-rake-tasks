@@ -28,7 +28,17 @@ conf = nginx_conf do
       ssl_certificate_key key_path
 
       location '/' do
-        auth_basic "\"Restricted\""
+        set '$realm', '"Restricted"'
+
+        if_ '$arg_service ~ git-upload-pack' do
+          set '$realm', :off
+        end
+
+        if_ '$uri ~ /git-upload-pack$' do
+          set '$realm', :off
+        end
+
+        auth_basic '$realm'
         auth_basic_user_file htpasswd_file
 
         include 'fastcgi_params'

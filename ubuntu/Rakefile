@@ -6,6 +6,6 @@ docker_tasks :ubuntu do
 
   apt = 'apt -y'
 
-  run apt, :update
-  run apt, :upgrade
+  onbuild :RUN, apt, :update
+  onbuild :RUN, apt, :upgrade
 end

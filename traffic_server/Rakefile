@@ -1,0 +1,21 @@
+require_relative '../ruby/docker'
+require_relative '../config.rb'
+
+
+
+cert_path = '/root/cert.pem'
+key_path = '/root/key.pem'
+
+
+docker_tasks 'traffic-server', "-p 443:443 -p 80:80 \
+                                -v #{CERT_PATH}:#{cert_path} \
+                                -v #{KEY_PATH}:#{key_path}" do
+  run 'apt -y install trafficserver'
+
+  run %(sed -i 's/\\(CONFIG proxy.config.http.server_ports STRING\\).*/\\1 80,443/' \
+        /etc/trafficserver/records.config)
+
+  expose 80, 443
+
+  cmd 'service trafficserver start && tail -f /dev/null'
+end

@@ -1,0 +1,51 @@
+require 'nginx-conf'
+
+require_relative '../ruby/docker'
+require_relative '../config'
+
+
+
+cert_path = '/root/cert.pem'
+key_path = '/root/key.pem'
+doc_root = '/www'
+
+conf = nginx_conf do
+  daemon :off
+
+  events do
+  end
+
+  http do
+    include 'mime.types'
+
+    server do
+      listen 443, :ssl
+
+      ssl_certificate     cert_path
+      ssl_certificate_key key_path
+
+      location '/' do
+        root doc_root
+      end
+    end
+  end
+end
+
+
+docker_tasks 'notes', "-p #{WEB_PORT}:443 \
+                       -v #{CERT_PATH}:#{cert_path} \
+                       -v #{KEY_PATH}:#{key_path}" do
+  run 'apt -y update && apt -y upgrade'
+  run 'apt -y install nginx git ruby ruby-redcarpet ruby-nokogiri'
+
+  run 'gem install map-rec xml-dsl'
+
+  File.write 'nginx.conf', conf
+  copy 'nginx.conf', '/etc/nginx/nginx.conf'
+
+  expose 443
+
+  cmd %(git clone https://github.com/raviqqe/notes #{doc_root} && \
+        while :; do cd #{doc_root} && git pull && rake; sleep 600; done & \
+        nginx)
+end

@@ -22,6 +22,12 @@ conf = nginx_conf do
       return_ 301, 'https://$host$request_uri'
     end
 
+    server do
+      listen 443, :ssl
+      server_name DOMAIN_NAME
+      return_ 301, "https://#{WEB_HOST}$request_uri"
+    end
+
     ssl_server = Proc.new do |host, port|
       server do
         listen 443, :ssl
@@ -43,8 +49,8 @@ end
 
 
 docker_tasks 'nginx-proxy', "-p 443:443 -p 80:80 \
-                            -v #{CERT_PATH}:#{cert_path} \
-                            -v #{KEY_PATH}:#{key_path}" do
+                             -v #{CERT_PATH}:#{cert_path} \
+                             -v #{KEY_PATH}:#{key_path}" do
   run 'apt -y update && apt -y upgrade'
   run 'apt -y install nginx'
 

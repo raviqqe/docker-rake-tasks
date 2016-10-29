@@ -25,6 +25,10 @@ conf = nginx_conf do
     server do
       listen 443, :ssl
       server_name DOMAIN_NAME
+
+      ssl_certificate     cert_path
+      ssl_certificate_key key_path
+
       return_ 301, "https://#{WEB_HOST}$request_uri"
     end
 

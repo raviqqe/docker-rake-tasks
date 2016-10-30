@@ -4,11 +4,11 @@ require_relative '../ruby/docker'
 docker_tasks :ubuntu do
   from 'ubuntu:xenial'
 
-  en_us = 'en_US.UTF-8'
-  run 'locale-gen', en_us
-  env :LANG, en_us
-  env :LANGUAGE, en_us
-  env :LC_ALL, en_us
+  locale = 'en_US.UTF-8'
+  run 'locale-gen', locale
+  env :LANG, locale
+  env :LANGUAGE, locale
+  env :LC_ALL, locale
 
   apt = 'apt -y'
   run apt, :update, '--fix-missing'

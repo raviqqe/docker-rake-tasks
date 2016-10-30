@@ -7,7 +7,7 @@ docker_tasks :ubuntu do
   locale = 'en_US.UTF-8'
   run 'locale-gen', locale
   env :LANG, locale
-  env :LANGUAGE, locale
+  env :LANGUAGE, 'en'
   env :LC_ALL, locale
 
   apt = 'apt -y'

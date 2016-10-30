@@ -13,6 +13,7 @@ def docker_tasks image, run_options='', &block
 
   task_run image, run_options
   task_rm image
+  task_rmi image
   task_rerun
   task_push image
 
@@ -78,6 +79,14 @@ end
 def task_stop image
   task :stop do
     maybe_sh docker_subcommand_on_image(:stop, image, 'grep -v Exited')
+  end
+end
+
+def task_rmi image
+  task_rm image
+
+  task :rmi => :rm do
+    sh "sudo docker rmi #{image}"
   end
 end
 

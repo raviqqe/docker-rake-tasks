@@ -46,6 +46,6 @@ docker_tasks 'notes', "-p #{WEB_PORT}:443 \
   expose 443
 
   cmd %(git clone https://github.com/raviqqe/notes #{doc_root} && \
-        while :; do cd #{doc_root} && git pull && rake; sleep 600; done & \
+        while :; do cd #{doc_root} && git pull && rake -B; sleep 600; done & \
         nginx)
 end

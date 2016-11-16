@@ -6,3 +6,9 @@ task :cert do
       -d www.raviqqe.com --email raviqqe@gmail.com \
       --non-interactive --agree-tos"
 end
+
+task :default do
+  %w(git_daemon nginx_proxy notes nsd).each do |dir|
+    sh "cd #{dir} && rake rerun"
+  end
+end

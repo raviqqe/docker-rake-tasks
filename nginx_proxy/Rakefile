@@ -23,7 +23,7 @@ conf = nginx_conf do
     end
 
     server do
-      listen 443, :ssl
+      listen 443, :ssl, :http2
       server_name DOMAIN_NAME
 
       ssl_certificate     cert_path
@@ -34,7 +34,7 @@ conf = nginx_conf do
 
     ssl_server = Proc.new do |host, port|
       server do
-        listen 443, :ssl
+        listen 443, :ssl, :http2
         server_name host
 
         ssl_certificate     cert_path

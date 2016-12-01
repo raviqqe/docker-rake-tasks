@@ -1,0 +1,20 @@
+require_relative '../ruby/docker'
+require_relative '../config'
+
+
+
+cert_path = '/root/cert.pem'
+key_path = '/root/key.pem'
+
+
+docker_tasks 'pure-ftpd', "-p 990:990 -p 21:21 \
+                           -v #{CERT_PATH}:#{cert_path} \
+                           -v #{KEY_PATH}:#{key_path}" do
+  run 'apt -y update && apt -y upgrade && apt -y install pure-ftpd'
+  run 'groupadd ftpgroup'
+  run 'useradd -g ftpgroup -M -s /usr/sbin/nologin ftpuser'
+
+  expose 990, 21
+
+  cmd 'pure-ftpd'
+end

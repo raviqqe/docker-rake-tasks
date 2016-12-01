@@ -8,6 +8,7 @@ key_path = '/root/key.pem'
 
 
 docker_tasks 'pure-ftpd', "-p 990:990 -p 21:21 \
+                           -v ftp:/home/ftp \
                            -v #{CERT_PATH}:#{cert_path} \
                            -v #{KEY_PATH}:#{key_path}" do
   run 'apt -y update && \

@@ -10,11 +10,25 @@ key_path = '/root/key.pem'
 docker_tasks 'pure-ftpd', "-p 990:990 -p 21:21 \
                            -v #{CERT_PATH}:#{cert_path} \
                            -v #{KEY_PATH}:#{key_path}" do
-  run 'apt -y update && apt -y upgrade && apt -y install pure-ftpd'
-  run 'groupadd ftpgroup'
-  run 'useradd -g ftpgroup -M -s /usr/sbin/nologin ftpuser'
+  run 'apt -y update && \
+       apt -y upgrade && \
+       apt -y install dpkg-dev devscripts equivs && \
+       apt -y source pure-ftpd'
+
+  run %(cd $(find . -type d -name 'pure-ftpd*') && \
+        sed -i 's/^optflags.*/\\0 --without-capabilities/' debian/rules && \
+        yes | mk-build-deps --install debian/control && \
+        dpkg-buildpackage -b -uc)
+  run 'apt -y install openbsd-inetd'
+  run 'dpkg -i pure-ftpd-common*.deb'
+  run 'dpkg -i pure-ftpd_*.deb'
+
+  run 'groupadd ftpd'
+  run 'useradd -g ftpd -m -s /usr/sbin/nologin ftpd'
+  run 'useradd -m -s /usr/sbin/nologin ftp' # enable anonymous login
 
   expose 990, 21
 
-  cmd 'pure-ftpd'
+  cmd "cat #{key_path} #{cert_path} > /etc/ssl/private/pure-ftpd.pem && \
+       pure-ftpd --tls=1 --createhomedir"
 end

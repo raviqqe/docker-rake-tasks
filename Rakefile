@@ -8,7 +8,7 @@ task :cert do
 end
 
 task :default do
-  %w(git_daemon nginx_proxy notes nsd).each do |dir|
+  %w(git_daemon nginx_proxy notes nsd pure_ftpd).each do |dir|
     sh "cd #{dir} && rake rerun"
   end
 end

@@ -7,8 +7,12 @@ task :cert do
       --non-interactive --agree-tos --expand"
 end
 
-task :default do
-  %w(git_daemon nginx_proxy notes nsd pure_ftpd).each do |dir|
-    sh "cd #{dir} && rake rerun"
+image_dirs = %w(git_daemon nginx_proxy notes nsd pure_ftpd)
+
+%i(rerun push).each do |name|
+  task name do
+    image_dirs.each do |dir|
+      sh "cd #{dir} && rake #{name}"
+    end
   end
 end

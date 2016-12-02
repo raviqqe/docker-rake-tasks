@@ -8,7 +8,7 @@ key_path = '/root/key.pem'
 passive_port_range = '60000-60255'
 
 
-docker_tasks 'pure-ftpd', "-p 990:990 -p 21:21 \
+docker_tasks 'pure-ftpd', "-p 21:21 \
                            -p #{passive_port_range}:#{passive_port_range} \
                            -v ftp:/home/ftp \
                            -v #{CERT_PATH}:#{cert_path} \
@@ -30,7 +30,7 @@ docker_tasks 'pure-ftpd', "-p 990:990 -p 21:21 \
   run 'useradd -g ftpd -m -s /usr/sbin/nologin ftpd'
   run 'useradd -m -s /usr/sbin/nologin ftp' # enable anonymous login
 
-  expose 990, 21, passive_port_range
+  expose 21, passive_port_range
 
   cmd "cat #{key_path} #{cert_path} > /etc/ssl/private/pure-ftpd.pem && \
        pure-ftpd --tls=1 --createhomedir -P ftp.raviqqe.com \

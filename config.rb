@@ -15,3 +15,5 @@ CERT_PATH = File.join cert_dir, 'fullchain.pem'
 KEY_PATH = File.join cert_dir, 'privkey.pem'
 
 GIT_REPO_VOLUME = 'git_repos'
+
+POST_MAX_SIZE = '256M'

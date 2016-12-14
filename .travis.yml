@@ -1,0 +1,12 @@
+sudo: required
+
+language: ruby
+
+services:
+  - docker
+
+install:
+  - gem install block-is-array dockerfile-dsl
+
+script:
+  - cd test && rake

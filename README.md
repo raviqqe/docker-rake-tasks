@@ -1,19 +1,6 @@
-# docker-images
+# docker-rake-tasks
 
-Docker images for my universe!
-
-## Images
-
-- `nginx`
-- `git_daemon`
-- `nsd`
-- `ubuntu`
-
-## Incomplete images
-
-- `nginx_proxy`
-- `gogs`
-- `postgres`
+Class to define tasks relevant to docker
 
 ## License
 

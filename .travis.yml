@@ -9,4 +9,4 @@ install:
   - gem install block-is-array dockerfile-dsl
 
 script:
-  - cd test && rake
+  - cd test && rake && rake run

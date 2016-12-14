@@ -53,8 +53,12 @@ class DockerTasks < Struct.new(:user, :maintainer, :base_image)
 
     task :run => :build do
       hostname = [File.basename(image), '.', `hostname`.strip].join
-      sh %(sudo docker run -itd -h #{hostname} --name #{hostname} #{options} \
-                            #{image})
+
+      if options !~ /--net/
+        options += "-h #{hostname}"
+      end
+
+      sh %(sudo docker run -itd --name #{hostname} #{options} #{image})
     end
   end
 

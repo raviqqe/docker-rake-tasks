@@ -1,0 +1,6 @@
+require "../docker"
+
+DockerTasks.new('raviqqe', 'Yota Toyama <raviqqe@gmail.com>', 'raviqqe/ubuntu').create "nginx" do
+  run 'apt -y update && apt -y upgrade && apt -y install nginx'
+  cmd :nginx
+end

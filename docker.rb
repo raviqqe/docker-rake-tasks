@@ -43,7 +43,7 @@ class DockerTasks < Struct.new(:user, :maintainer, :base_image)
   end
 
   def task_push image
-    task :push do
+    task :push => :build do
       sh %(sudo docker push #{image})
     end
   end
